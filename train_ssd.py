@@ -1,3 +1,11 @@
+'''
+python train_ssd.py --datasets /home/zyl/data/behavior/totrain/behavior1224/action \
+    --validation_dataset /home/zyl/data/behavior/totrain/behavior1224/action \
+    --net mb3-ssd-lite --checkpoint_folder output/behavior1224/ \
+    --scheduler cosine --lr 0.01 --t_max 100 --validation_epochs 5 \
+    --num_epochs 100 --base_net_lr 0.001
+'''
+
 import argparse
 import os
 import logging
@@ -330,9 +338,10 @@ if __name__ == '__main__':
 
 
     for epoch in range(last_epoch + 1, args.num_epochs):
-        scheduler.step()
+        
         train(train_loader, net, criterion, optimizer,
               device=DEVICE, debug_steps=args.debug_steps, epoch=epoch)
+        scheduler.step()
         
         if epoch % args.validation_epochs == 0 or epoch == args.num_epochs - 1:
             val_loss, val_regression_loss, val_classification_loss = test(val_loader, net, criterion, DEVICE)
